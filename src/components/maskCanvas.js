@@ -25,7 +25,7 @@ export function initMaskCanvas() {
 
   // Load Base Stone Mask Image
   const stoneImage = new Image();
-  stoneImage.src = '/assets/stone_mask.jpg';
+  stoneImage.src = `${import.meta.env.BASE_URL}assets/stone_mask.jpg`;
   
   let isImageLoaded = false;
   stoneImage.onload = () => {
