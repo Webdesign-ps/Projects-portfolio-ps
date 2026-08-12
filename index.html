@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DESIGN-PS — UI/UX Designer & Digital Studio</title>
-  <meta name="description" content="Portfolio of Design-ps — Senior UI/UX Designer & Digital Art Director crafting dark editorial interactive experiences, visual systems, and digital spaces." />
+  <title>WEBDESIGN-PS — UI/UX Designer & Digital Studio</title>
+  <meta name="description" content="Portfolio of WebDesign-ps — Senior UI/UX Designer & Digital Art Director crafting dark editorial interactive experiences, visual systems, and digital spaces." />
   
   <!-- Tailwind CSS Engine -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -34,8 +34,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&family=Inter:wght@200;300;400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
   
-  <script type="module" crossorigin src="./assets/index-D4J4ZeEo.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-B7d24YPn.css">
+  <script type="module" crossorigin src="./assets/index-buyzDn4M.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-C8s9c6-Q.css">
 </head>
 <body class="bg-black text-offwhite overflow-x-hidden selection:bg-white selection:text-black">
 
@@ -59,16 +59,11 @@
   <div id="cursor-dot" class="cursor-dot"></div>
   <div id="cursor-badge" class="cursor-badge">REVEAL</div>
 
-<!-- Minimalistic Preloader — Black mask, then photo, then white mask reveal -->
-  <div id="preloader" class="fixed inset-0 z-50">
-    <div class="preloader-stage black-stage"></div>
+  <!-- Minimalistic Preloader — Only Mask Image, No Text -->
+  <div id="preloader" class="fixed inset-0 z-50 flex items-center justify-center bg-black transition-opacity duration-800">
     <div class="preloader-mask-wrap relative flex items-center justify-center">
-      <img id="preloader-mask" src="./assets/preloader_mask.png" alt="Mask" class="w-48 h-auto sm:w-56 md:w-64 object-contain opacity-0 transition-opacity duration-700" />
+      <img id="preloader-mask" src="./assets/preloader_mask.png" alt="Mask" class="w-40 h-auto sm:w-52 md:w-64 object-contain opacity-0 transition-opacity duration-700" />
     </div>
-    <div id="preloader-photo" class="preloader-photo"></div>
-    <div id="preloader-white" class="preloader-white"></div>
-    <div id="preloader-bar" class="preloader-bar"><span id="preloader-bar-fill"></span><span id="preloader-count">0%</span></div>
-  </div>
   </div>
 
   <!-- Minimal Header -->
