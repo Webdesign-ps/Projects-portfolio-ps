@@ -14,6 +14,8 @@ export function initMaskCanvas() {
 
   if (!canvas || !container || !video) return;
 
+  const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
   const ctx = canvas.getContext('2d');
   
   // Offscreen canvases for composite masking
@@ -50,18 +52,20 @@ export function initMaskCanvas() {
   
   let targetRadius = 0;
   let currentRadius = 0;
-  let baseRadius = 180;
+  let baseRadius = isMobile ? 260 : 180;
 
   let mouseVelocity = 0;
   let lastMouseX = 0;
   let lastMouseY = 0;
+  let lastInteraction = 0;
 
   let animFrameId = null;
 
   // Canvas Resize Handler (High DPI support) — FULLSCREEN COVER
   function resizeCanvas() {
     const rect = container.getBoundingClientRect();
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    // Cap DPR: 1x on mobile (big perf win), 2x on desktop
+    const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1 : 2);
     
     canvas.width = rect.width * dpr;
     canvas.height = rect.height * dpr;
@@ -152,16 +156,26 @@ export function initMaskCanvas() {
     isHovered = false;
   });
 
-  // Touch Support
+  // Touch Support — tap/drag reveals instantly, swipe scrolls page
   container.addEventListener('touchstart', (e) => {
+    lastInteraction = performance.now();
     isHovered = true;
     if (e.touches.length > 0) {
       updatePointerPosition(e.touches[0].clientX, e.touches[0].clientY);
+      // Jump straight to full reveal instead of waiting for lerp
+      currentX = targetX;
+      currentY = targetY;
+      currentRadius = baseRadius;
+      targetRadius = baseRadius;
+    }
+    // iOS Safari needs explicit play on user gesture
+    if (video.paused) {
+      video.play().catch(() => {});
     }
   }, { passive: true });
 
   container.addEventListener('touchmove', (e) => {
-    isHovered = true;
+    lastInteraction = performance.now();
     if (e.touches.length > 0) {
       updatePointerPosition(e.touches[0].clientX, e.touches[0].clientY);
     }
@@ -171,14 +185,24 @@ export function initMaskCanvas() {
     isHovered = false;
   });
 
-  // Main Render Loop
+  // Main Render Loop — throttled on mobile for performance
+  let lastFrame = 0;
+  const frameInterval = isMobile ? 33 : 16.7;
+
   function render() {
+    const now = performance.now();
+    if (now - lastFrame < frameInterval) {
+      animFrameId = requestAnimationFrame(render);
+      return;
+    }
+    lastFrame = now;
+
     const rect = container.getBoundingClientRect();
     const w = rect.width;
     const h = rect.height;
 
-    // Lerp cursor position
-    const lerpFactor = 0.08;
+    // Lerp cursor position (faster snap on mobile touch)
+    const lerpFactor = isMobile ? 0.25 : 0.08;
     currentX += (targetX - currentX) * lerpFactor;
     currentY += (targetY - currentY) * lerpFactor;
 
@@ -199,8 +223,9 @@ export function initMaskCanvas() {
       const stoneDim = compactDim(getCoverDimensions(stoneImage.width, stoneImage.height, w, h), w);
       ctx.drawImage(stoneImage, stoneDim.offsetX, stoneDim.offsetY, stoneDim.drawWidth, stoneDim.drawHeight);
 
-      // Nature reveal
-      if (currentRadius > 0.5) {
+      // Nature reveal — only when there is an actual video frame available
+      const videoReady = video.readyState >= 2 || video.videoWidth > 0;
+      if (currentRadius > 0.5 && videoReady) {
         const videoWidth = video.videoWidth || 1920;
         const videoHeight = video.videoHeight || 1080;
         const vidDim = compactDim(getCoverDimensions(videoWidth, videoHeight, w, h), w);
