@@ -1,0 +1,249 @@
+/* Dark Editorial Brutalist Design System — WebDesign-ps Portfolio */
+
+:root {
+  --color-black: #000000;
+  --color-dark-1: #050505;
+  --color-dark-2: #0a0a0a;
+  --color-dark-3: #111111;
+  --color-dark-4: #1a1a1a;
+  --color-offwhite: #f1f1ef;
+  --color-muted: #b8b8b8;
+  --color-accent: #10b981;
+
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Syne', sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* Reset & Base Styles */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Hide default OS cursor */
+html, body, a, button, input, select, canvas, div, span, img {
+  cursor: none !important;
+}
+
+html {
+  background-color: var(--color-black) !important;
+  color: var(--color-offwhite) !important;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-black) !important;
+  color: var(--color-offwhite) !important;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* Noise Overlay */
+.noise-overlay {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  pointer-events: none !important;
+  opacity: 0.035 !important;
+  mix-blend-mode: overlay !important;
+  z-index: 9999 !important;
+}
+
+/* Typography Utilities */
+.font-serif { font-family: var(--font-serif) !important; }
+.font-sans { font-family: var(--font-sans) !important; }
+.font-display { font-family: var(--font-display) !important; }
+.font-mono { font-family: var(--font-mono) !important; }
+
+.text-offwhite { color: var(--color-offwhite) !important; }
+.text-muted { color: var(--color-muted) !important; }
+
+/* Background Grid Overlay */
+.grid-overlay {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  width: 100%;
+  height: 100vh;
+}
+
+.grid-line {
+  border-right: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.grid-line:last-child {
+  border-right: none;
+}
+
+/* Custom Cursor — SMALLER */
+.cursor-dot {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 6px;
+  height: 6px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99999;
+  transform: translate(-50%, -50%);
+  transition: width 0.2s ease, height 0.2s ease, background-color 0.2s ease, opacity 0.2s ease;
+  mix-blend-mode: difference;
+}
+
+.cursor-dot.active {
+  width: 24px;
+  height: 24px;
+  background-color: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+}
+
+.cursor-badge {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 99999;
+  transform: translate(14px, 14px);
+  padding: 4px 10px;
+  background-color: rgba(0, 0, 0, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(8px);
+  border-radius: 9999px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: var(--color-offwhite);
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.cursor-badge.visible {
+  opacity: 1;
+}
+
+/* Preloader Screen */
+#preloader {
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.8s;
+}
+
+/* Preloader mask pulse animation */
+@keyframes maskPulse {
+  0%, 100% { transform: scale(1); opacity: 0.7; }
+  50% { transform: scale(1.03); opacity: 1; }
+}
+
+.preloader-mask-wrap img {
+  animation: maskPulse 2s ease-in-out infinite;
+}
+
+/* Scrollbar Hidden */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Mask Canvas Container — Fullscreen Cover */
+.mask-container {
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+#mask-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Statement Word Animation */
+.statement-section .word {
+  display: inline-block;
+  transition: color 0.5s ease, opacity 0.5s ease, transform 0.5s ease;
+}
+
+.statement-section .word.active {
+  color: var(--color-offwhite) !important;
+  opacity: 1 !important;
+}
+
+/* Process Section */
+.process-step {
+  transition: border-color 0.3s ease, transform 0.3s ease;
+}
+
+.process-step:hover {
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: translateY(-4px);
+}
+
+/* Fade-up animation class (initial state) */
+.fade-up {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+/* Hero line animation class */
+.hero-line {
+  opacity: 0;
+  transform: translateY(60px);
+}
+
+.hero-fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+/* Lenis Smooth Scroll CSS setup */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+  .cursor-dot, .cursor-badge {
+    display: none !important;
+  }
+  
+  html, body, a, button, input, select, canvas, div, span, img {
+    cursor: auto !important;
+  }
+
+  .desktop-hint {
+    display: none !important;
+  }
+  
+  .mobile-hint {
+    display: inline-block !important;
+  }
+}

@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WEBDESIGN-PS — UI/UX Designer & Digital Studio</title>
+  <meta name="description" content="Portfolio of WebDesign-ps — Senior UI/UX Designer & Digital Art Director crafting dark editorial interactive experiences, visual systems, and digital spaces." />
+  
+  <!-- Tailwind CSS Engine -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            offwhite: '#f1f1ef',
+            muted: '#b8b8b8',
+            accent: '#10b981',
+          },
+          fontFamily: {
+            serif: ['Cormorant Garamond', 'Georgia', 'serif'],
+            sans: ['Inter', '-apple-system', 'sans-serif'],
+            display: ['Syne', 'sans-serif'],
+            mono: ['ui-monospace', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Fonts: Cormorant Garamond, Inter, Syne -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&family=Inter:wght@200;300;400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet" />
+  
+  <link rel="stylesheet" href="/src/styles/main.css" />
+</head>
+<body class="bg-black text-offwhite overflow-x-hidden selection:bg-white selection:text-black">
+
+  <!-- SVG Noise Grain Overlay Filter -->
+  <svg class="noise-overlay" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; opacity: 0.035; mix-blend-mode: overlay; z-index: 9999;">
+    <filter id="noiseFilter">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
+    </filter>
+    <rect width="100%" height="100%" filter="url(#noiseFilter)" />
+  </svg>
+
+  <!-- Background Grid Lines -->
+  <div class="grid-overlay pointer-events-none fixed inset-0 z-0">
+    <div class="grid-line line-1"></div>
+    <div class="grid-line line-2"></div>
+    <div class="grid-line line-3"></div>
+    <div class="grid-line line-4"></div>
+  </div>
+
+  <!-- Custom Cursor -->
+  <div id="cursor-dot" class="cursor-dot"></div>
+  <div id="cursor-badge" class="cursor-badge">REVEAL</div>
+
+  <!-- Minimalistic Preloader — Only Mask Image, No Text -->
+  <div id="preloader" class="fixed inset-0 z-50 flex items-center justify-center bg-black transition-opacity duration-800">
+    <div class="preloader-mask-wrap relative flex items-center justify-center">
+      <img id="preloader-mask" src="/assets/preloader_mask.png" alt="Mask" class="w-40 h-auto sm:w-52 md:w-64 object-contain opacity-0 transition-opacity duration-700" />
+    </div>
+  </div>
+
+  <!-- Minimal Header -->
+  <header class="site-header fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-6 py-5 md:px-12 md:py-6 backdrop-blur-xl bg-black/20">
+    <a href="#" class="brand-logo text-xs font-mono uppercase tracking-widest text-white hover:opacity-70 transition-opacity">
+      WebDesign-ps
+    </a>
+    
+    <nav class="flex items-center gap-8 md:gap-12">
+      <a href="#work" class="nav-link text-xs font-mono uppercase tracking-widest text-muted hover:text-white transition-colors">WORK</a>
+      <a href="#about" class="nav-link text-xs font-mono uppercase tracking-widest text-muted hover:text-white transition-colors">ABOUT</a>
+      <a href="#contact" class="nav-link text-xs font-mono uppercase tracking-widest text-muted hover:text-white transition-colors">CONTACT</a>
+    </nav>
+
+    <div class="hidden lg:block text-xs font-mono tracking-widest text-muted uppercase">
+      UI/UX DESIGNER © 2026
+    </div>
+  </header>
+
+  <main class="relative z-10">
+
+    <!-- HERO SECTION — Fullscreen Mask Cover -->
+    <section class="hero-section relative min-h-screen w-full flex flex-col justify-end px-6 pb-12 md:px-12 md:pb-16 overflow-hidden">
+      
+      <!-- Full-Screen Interactive Mask Background -->
+      <div id="mask-container" class="mask-container absolute inset-0 w-full h-full cursor-none z-0">
+        <canvas id="mask-canvas" class="pointer-events-auto"></canvas>
+        
+        <!-- Hidden Video Source for Nature Mask -->
+        <video id="nature-video" class="hidden" muted loop playsinline preload="auto">
+          <source src="/assets/nature_mask.mp4" type="video/mp4" />
+        </video>
+
+        <!-- Floating Interactive Hint -->
+        <div class="mask-hint pointer-events-none absolute bottom-20 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-2 bg-black/60 backdrop-blur-md border border-white/10 rounded-full text-[10px] font-mono tracking-widest text-white/70 uppercase z-20">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="desktop-hint">HOVER TO REVEAL</span>
+          <span class="mobile-hint hidden">TOUCH TO REVEAL</span>
+        </div>
+      </div>
+
+      <!-- Hero Bottom Content Overlay -->
+      <div class="relative z-10 pointer-events-none">
+        <div class="hero-quote-wrap mb-8">
+          <h1 class="text-5xl sm:text-7xl md:text-8xl lg:text-[7.5rem] xl:text-[8.5rem] font-serif italic font-light leading-[0.95] tracking-tight text-offwhite hero-line">
+            Stone remembers
+          </h1>
+          <h2 class="text-5xl sm:text-7xl md:text-8xl lg:text-[7.5rem] xl:text-[8.5rem] font-sans font-bold leading-[0.95] tracking-tighter text-white mt-1 hero-line">
+            what time forgets
+          </h2>
+        </div>
+
+        <!-- Bottom Bar -->
+        <div class="flex flex-wrap items-end justify-between gap-4 border-t border-white/10 pt-5 pointer-events-auto">
+          <div>
+            <div class="text-2xl sm:text-3xl md:text-4xl font-display font-extrabold uppercase tracking-tight text-white/90 hero-fade-in">
+              WEBDESIGN-PS
+            </div>
+            <div class="text-sm font-mono tracking-widest text-white/60 uppercase mt-1 hero-fade-in">
+              DIGITAL DESIGNER & ART DIRECTION
+            </div>
+          </div>
+          <div class="flex flex-wrap gap-2 text-[11px] font-mono tracking-widest uppercase text-muted hero-fade-in">
+            <span class="px-3 py-1 border border-white/10 rounded-full">UI/UX</span>
+            <span class="px-3 py-1 border border-white/10 rounded-full">DIGITAL ART</span>
+            <span class="px-3 py-1 border border-white/10 rounded-full">INTERACTION</span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- STATEMENT SECTION (Scroll-driven Word Reveal) -->
+    <section class="statement-section py-32 md:py-48 px-6 md:px-12 border-t border-white/10 relative overflow-hidden bg-zinc-950/40">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-xs font-mono uppercase tracking-widest text-muted mb-8 fade-up">STATEMENT & PHILOSOPHY</div>
+        
+        <h2 id="statement-text" class="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-serif font-light leading-[0.9] tracking-tighter uppercase text-white/20 transition-colors">
+          <span class="word">I</span> <span class="word">MAKE</span> <br />
+          <span class="word font-sans font-extrabold text-white/30">DIGITAL</span> <br />
+          <span class="word">OBJECTS.</span>
+        </h2>
+      </div>
+    </section>
+
+    <!-- HORIZONTAL SCROLL PROJECTS SECTION -->
+    <section id="work" class="horizontal-work-section relative border-t border-white/10 bg-black overflow-hidden">
+      
+      <!-- Section Header Banner -->
+      <div class="px-6 md:px-12 pt-12 pb-6 flex justify-between items-end border-b border-white/10 fade-up">
+        <div>
+          <div class="text-xs font-mono uppercase tracking-widest text-muted mb-2">02 / SELECTED WORK</div>
+          <h2 class="text-4xl md:text-6xl font-serif uppercase tracking-tight">PROJECT ARCHIVE</h2>
+        </div>
+        <div class="hidden md:flex items-center gap-3 text-xs font-mono tracking-widest text-muted uppercase">
+          <span>[ HORIZONTAL SCROLL ]</span>
+          <span class="text-emerald-400">← SLIDE →</span>
+        </div>
+      </div>
+
+      <!-- Horizontal Pinned Track Wrapper -->
+      <div id="horizontal-wrapper" class="relative w-full overflow-x-auto overflow-y-hidden scrollbar-none">
+        
+        <div id="horizontal-track" class="flex w-[200vw] min-h-[80vh]">
+          
+          <!-- Slide 01: STRATA -->
+          <article class="project-slide w-[100vw] min-h-[80vh] p-4 md:p-8 flex flex-col justify-between border-r border-white/10 flex-shrink-0 bg-gradient-to-br from-zinc-950 via-black to-zinc-900">
+            
+            <div class="flex justify-between items-center text-xs font-mono uppercase tracking-widest text-muted mb-3">
+              <span>01 / INTERACTIVE WEBSITE</span>
+              <span class="px-3 py-1 border border-white/20 rounded-full text-white/90">STRATA STUDIO</span>
+            </div>
+
+            <!-- Project Image — pushed higher -->
+            <div class="w-full max-w-6xl mx-auto overflow-hidden border border-white/20 shadow-2xl rounded-sm aspect-[16/9] relative group cursor-pointer flex-1">
+              <img src="/assets/strata_preview.png" alt="Strata Project" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" />
+              <div class="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                <span class="px-6 py-3 bg-black/80 backdrop-blur-md border border-white/30 rounded-full text-xs font-mono tracking-widest uppercase text-white opacity-0 group-hover:opacity-100 transition-opacity">EXPLORE STRATA →</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end mt-3">
+              <div class="md:col-span-7">
+                <h3 class="text-4xl md:text-6xl font-serif uppercase tracking-tight text-white mb-1">STRATA</h3>
+                <p class="text-base md:text-lg font-serif italic text-white/80">"WE BUILD WHAT LASTS."</p>
+              </div>
+              <div class="md:col-span-5 flex flex-wrap gap-2 justify-start md:justify-end text-[10px] font-mono tracking-widest uppercase text-muted">
+                <span class="px-3 py-1 border border-white/10 rounded-full">ARCHITECTURE</span>
+                <span class="px-3 py-1 border border-white/10 rounded-full">ENGINEERING</span>
+                <span class="px-3 py-1 border border-white/10 rounded-full">WEBGL</span>
+              </div>
+            </div>
+
+          </article>
+
+          <!-- Slide 02: F1 -->
+          <article class="project-slide w-[100vw] min-h-[80vh] p-4 md:p-8 flex flex-col justify-between flex-shrink-0 bg-gradient-to-bl from-zinc-900 via-black to-neutral-950">
+            
+            <div class="flex justify-between items-center text-xs font-mono uppercase tracking-widest text-muted mb-3">
+              <span>02 / FORMULA 1 EXPERIENCE</span>
+              <span class="px-3 py-1 border border-white/20 rounded-full text-white/90">F1 MERCEDES CONCEPT</span>
+            </div>
+
+            <!-- Project Image — pushed higher -->
+            <div class="w-full max-w-6xl mx-auto overflow-hidden border border-white/20 shadow-2xl rounded-sm aspect-[16/9] relative group cursor-pointer flex-1">
+              <img src="/assets/f1_preview.png" alt="F1 Project" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" />
+              <div class="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                <span class="px-6 py-3 bg-black/80 backdrop-blur-md border border-white/30 rounded-full text-xs font-mono tracking-widest uppercase text-white opacity-0 group-hover:opacity-100 transition-opacity">EXPLORE F1 →</span>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end mt-3">
+              <div class="md:col-span-7">
+                <h3 class="text-4xl md:text-6xl font-serif uppercase tracking-tight text-white mb-1">F1 CONCEPT</h3>
+                <p class="text-base md:text-lg font-sans font-bold tracking-tight text-white/90 uppercase">"TWO DRIVERS. ONE MACHINE."</p>
+              </div>
+              <div class="md:col-span-5 flex flex-wrap gap-2 justify-start md:justify-end text-[10px] font-mono tracking-widest uppercase text-muted">
+                <span class="px-3 py-1 border border-white/10 rounded-full">FORMULA 1</span>
+                <span class="px-3 py-1 border border-white/10 rounded-full">MOTION ART</span>
+                <span class="px-3 py-1 border border-white/10 rounded-full">CANVAS</span>
+              </div>
+            </div>
+
+          </article>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section id="about" class="about-section py-32 px-6 md:px-12 border-t border-white/10">
+      
+      <div class="text-xs font-mono uppercase tracking-widest text-muted mb-12 fade-up">03 / PHILOSOPHY & ABOUT</div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+        
+        <div class="lg:col-span-5 fade-up">
+          <h2 class="text-6xl sm:text-7xl md:text-8xl font-serif uppercase tracking-tight leading-none">
+            ABOUT<br />STUDIO
+          </h2>
+        </div>
+
+        <div class="lg:col-span-7 space-y-8 fade-up">
+          <p class="text-xl sm:text-2xl md:text-3xl font-serif font-light text-offwhite/90 leading-snug">
+            I'm WebDesign-ps, a UI/UX designer focused on digital experiences, visual systems and interactive interfaces.
+          </p>
+          <p class="text-base sm:text-lg text-muted font-sans font-light leading-relaxed">
+            I combine design, motion and technology to create experiences that feel less like websites and more like digital spaces.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Skills / Disciplines List -->
+      <div class="mt-28 border-t border-white/10 pt-16">
+        <div class="text-xs font-mono uppercase tracking-widest text-muted mb-12 fade-up">CAPABILITIES & DISCIPLINES</div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div class="skill-item p-6 border border-white/10 hover:border-white/40 hover:bg-white/5 transition-all">
+            <span class="text-xs font-mono text-muted tracking-widest block mb-4">01 —</span>
+            <h3 class="text-2xl font-serif uppercase tracking-tight">UI / UX DESIGN</h3>
+          </div>
+          <div class="skill-item p-6 border border-white/10 hover:border-white/40 hover:bg-white/5 transition-all">
+            <span class="text-xs font-mono text-muted tracking-widest block mb-4">02 —</span>
+            <h3 class="text-2xl font-serif uppercase tracking-tight">ART DIRECTION</h3>
+          </div>
+          <div class="skill-item p-6 border border-white/10 hover:border-white/40 hover:bg-white/5 transition-all">
+            <span class="text-xs font-mono text-muted tracking-widest block mb-4">03 —</span>
+            <h3 class="text-2xl font-serif uppercase tracking-tight">MOTION DESIGN</h3>
+          </div>
+          <div class="skill-item p-6 border border-white/10 hover:border-white/40 hover:bg-white/5 transition-all">
+            <span class="text-xs font-mono text-muted tracking-widest block mb-4">04 —</span>
+            <h3 class="text-2xl font-serif uppercase tracking-tight">WEB DESIGN</h3>
+          </div>
+          <div class="skill-item p-6 border border-white/10 hover:border-white/40 hover:bg-white/5 transition-all">
+            <span class="text-xs font-mono text-muted tracking-widest block mb-4">05 —</span>
+            <h3 class="text-2xl font-serif uppercase tracking-tight">INTERACTION</h3>
+          </div>
+          <div class="skill-item p-6 border border-white/10 hover:border-white/40 hover:bg-white/5 transition-all">
+            <span class="text-xs font-mono text-muted tracking-widest block mb-4">06 —</span>
+            <h3 class="text-2xl font-serif uppercase tracking-tight">3D / DIGITAL ART</h3>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- PROCESS SECTION -->
+    <section class="process-section py-32 px-6 md:px-12 border-t border-white/10 bg-zinc-950/30">
+      <div class="text-xs font-mono uppercase tracking-widest text-muted mb-16 fade-up">04 / METHODOLOGY</div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
+        
+        <div class="process-step border-t border-white/20 pt-6">
+          <span class="text-xs font-mono text-muted tracking-widest block mb-2">01</span>
+          <h3 class="text-3xl font-serif uppercase tracking-tight mb-2">DISCOVER</h3>
+          <p class="text-xs text-muted font-sans font-light">Research, editorial direction, core concepts.</p>
+        </div>
+
+        <div class="process-step border-t border-white/20 pt-6">
+          <span class="text-xs font-mono text-muted tracking-widest block mb-2">02</span>
+          <h3 class="text-3xl font-serif uppercase tracking-tight mb-2">DEFINE</h3>
+          <p class="text-xs text-muted font-sans font-light">Information architecture, wireframing, moodboards.</p>
+        </div>
+
+        <div class="process-step border-t border-white/20 pt-6">
+          <span class="text-xs font-mono text-muted tracking-widest block mb-2">03</span>
+          <h3 class="text-3xl font-serif uppercase tracking-tight mb-2">DESIGN</h3>
+          <p class="text-xs text-muted font-sans font-light">Visual systems, high-contrast editorial typography, UI.</p>
+        </div>
+
+        <div class="process-step border-t border-white/20 pt-6">
+          <span class="text-xs font-mono text-muted tracking-widest block mb-2">04</span>
+          <h3 class="text-3xl font-serif uppercase tracking-tight mb-2">BUILD</h3>
+          <p class="text-xs text-muted font-sans font-light">Interactive prototyping, WebGL/Canvas micro-animations.</p>
+        </div>
+
+        <div class="process-step border-t border-white/20 pt-6">
+          <span class="text-xs font-mono text-muted tracking-widest block mb-2">05</span>
+          <h3 class="text-3xl font-serif uppercase tracking-tight mb-2">REFINE</h3>
+          <p class="text-xs text-muted font-sans font-light">Polish 60fps performance, sound, micro-interactions.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section id="contact" class="contact-section py-32 md:py-48 px-6 md:px-12 border-t border-white/10 min-h-screen flex flex-col justify-between">
+      
+      <div class="fade-up">
+        <div class="text-xs font-mono uppercase tracking-widest text-muted mb-8">05 / INQUIRIES & COMMISSIONS</div>
+        
+        <h2 class="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-serif uppercase tracking-tighter leading-[0.88] max-w-6xl">
+          LET'S MAKE<br />
+          <span class="font-sans font-extrabold text-white/90">SOMETHING</span><br />
+          UNEXPECTED.
+        </h2>
+      </div>
+
+      <div class="mt-20 border-t border-white/10 pt-12 grid grid-cols-1 md:grid-cols-12 gap-8 items-end fade-up">
+        <div class="md:col-span-8 flex flex-wrap gap-8 text-xs font-mono uppercase tracking-widest">
+          <a href="mailto:contact@webdesign-ps.com" class="hover:text-white text-muted transition-colors border-b border-muted pb-1">EMAIL</a>
+          <a href="https://behance.net" target="_blank" rel="noopener" class="hover:text-white text-muted transition-colors border-b border-muted pb-1">BEHANCE</a>
+          <a href="https://dribbble.com" target="_blank" rel="noopener" class="hover:text-white text-muted transition-colors border-b border-muted pb-1">DRIBBBLE</a>
+          <a href="https://instagram.com" target="_blank" rel="noopener" class="hover:text-white text-muted transition-colors border-b border-muted pb-1">INSTAGRAM</a>
+          <a href="https://linkedin.com" target="_blank" rel="noopener" class="hover:text-white text-muted transition-colors border-b border-muted pb-1">LINKEDIN</a>
+        </div>
+
+        <div class="md:col-span-4 text-left md:text-right text-xs font-mono tracking-widest text-muted uppercase">
+          © 2026 WEBDESIGN-PS
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
