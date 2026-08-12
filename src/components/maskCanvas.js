@@ -60,7 +60,7 @@ export function initMaskCanvas() {
   
   let targetRadius = 0;
   let currentRadius = 0;
-  let baseRadius = isMobile ? 260 : 180;
+  let baseRadius = isMobile ? 150 : 180;
 
   let mouseVelocity = 0;
   let lastMouseX = 0;
@@ -124,10 +124,10 @@ export function initMaskCanvas() {
 
   // Device-aware framing:
   // - desktop: shrink ~12%, shift right ~12% of container
-  // - mobile: shrink ~25%, shift left ~18%, centered vertically
+  // - mobile: shrink ~25%, shift left ~30%, centered vertically
   function compactDim(dim, containerWidth) {
     const scale = isMobile ? 0.75 : 0.875;
-    const shiftX = containerWidth * (isMobile ? -0.18 : 0.12);
+    const shiftX = containerWidth * (isMobile ? -0.30 : 0.12);
     const drawWidth = dim.drawWidth * scale;
     const drawHeight = dim.drawHeight * scale;
     return {
@@ -221,7 +221,7 @@ export function initMaskCanvas() {
     currentY += (targetY - currentY) * lerpFactor;
 
     // Dynamic radius
-    const dynamicBase = baseRadius + Math.min(mouseVelocity * 1.5, 50);
+    const dynamicBase = baseRadius + Math.min(mouseVelocity * (isMobile ? 0.6 : 1.5), isMobile ? 20 : 50);
     targetRadius = isHovered ? dynamicBase : 0;
     
     const radiusLerp = isHovered ? 0.1 : 0.04;
