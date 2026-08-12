@@ -39,6 +39,14 @@ export function initMaskCanvas() {
   video.muted = true;
   video.loop = true;
   video.playsInline = true;
+  video.setAttribute('playsinline', '');
+  video.setAttribute('webkit-playsinline', '');
+  video.setAttribute('disablepictureinpicture', '');
+  // Desktop: eager load so hover reveal is instant. Mobile: on-demand to save data/battery.
+  video.preload = isMobile ? 'metadata' : 'auto';
+  if (!isMobile) {
+    video.load();
+  }
   video.play().catch(err => {
     console.warn("Autoplay muted video fallback:", err);
   });
@@ -114,10 +122,12 @@ export function initMaskCanvas() {
     return { drawWidth, drawHeight, offsetX, offsetY };
   }
 
-  // Shrink the media ~12% and shift it right ~12% of the container
+  // Device-aware framing:
+  // - desktop: shrink ~12%, shift right ~12% of container
+  // - mobile: shrink ~12%, shift left ~12%, centered vertically
   function compactDim(dim, containerWidth) {
     const scale = 0.875;
-    const shiftX = containerWidth * 0.12;
+    const shiftX = containerWidth * (isMobile ? -0.12 : 0.12);
     const drawWidth = dim.drawWidth * scale;
     const drawHeight = dim.drawHeight * scale;
     return {
@@ -156,17 +166,24 @@ export function initMaskCanvas() {
     isHovered = false;
   });
 
-  // Touch Support — tap/drag reveals instantly, swipe scrolls page
+  // Touch Support — finger follows smoothly; vertical swipe scrolls the page
+  let gestureScrollLock = false;
+  let gestureStartX = 0;
+  let gestureStartY = 0;
+  let lastMoveY = 0;
+
   container.addEventListener('touchstart', (e) => {
     lastInteraction = performance.now();
-    isHovered = true;
     if (e.touches.length > 0) {
-      updatePointerPosition(e.touches[0].clientX, e.touches[0].clientY);
-      // Jump straight to full reveal instead of waiting for lerp
+      const t = e.touches[0];
+      gestureStartX = t.clientX;
+      gestureStartY = t.clientY;
+      lastMoveY = t.clientY;
+      gestureScrollLock = false;
+      isHovered = true;
+      updatePointerPosition(t.clientX, t.clientY);
       currentX = targetX;
       currentY = targetY;
-      currentRadius = baseRadius;
-      targetRadius = baseRadius;
     }
     // iOS Safari needs explicit play on user gesture
     if (video.paused) {
@@ -177,12 +194,37 @@ export function initMaskCanvas() {
   container.addEventListener('touchmove', (e) => {
     lastInteraction = performance.now();
     if (e.touches.length > 0) {
-      updatePointerPosition(e.touches[0].clientX, e.touches[0].clientY);
+      const t = e.touches[0];
+      const dy = t.clientY - gestureStartY;
+      const dx = Math.abs(t.clientX - gestureStartX);
+
+      // If movement is mostly vertical, treat as page scroll
+      if (!gestureScrollLock && Math.abs(dy) > 24 && Math.abs(dy) > dx) {
+        gestureScrollLock = true;
+        isHovered = false;
+        lastMoveY = t.clientY;
+        return;
+      }
+
+      if (gestureScrollLock) {
+        const delta = t.clientY - lastMoveY;
+        lastMoveY = t.clientY;
+        window.scrollBy(0, delta);
+        return;
+      }
+
+      updatePointerPosition(t.clientX, t.clientY);
     }
   }, { passive: true });
 
   container.addEventListener('touchend', () => {
     isHovered = false;
+    gestureScrollLock = false;
+  });
+
+  container.addEventListener('touchcancel', () => {
+    isHovered = false;
+    gestureScrollLock = false;
   });
 
   // Main Render Loop — throttled on mobile for performance

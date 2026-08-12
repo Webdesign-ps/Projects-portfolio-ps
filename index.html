@@ -61,7 +61,7 @@
   <!-- Minimalistic Preloader — Only Mask Image, No Text -->
   <div id="preloader" class="fixed inset-0 z-50 flex items-center justify-center bg-black transition-opacity duration-800">
     <div class="preloader-mask-wrap relative flex items-center justify-center">
-      <img id="preloader-mask" src="/assets/preloader_mask.png" alt="Mask" class="w-40 h-auto sm:w-52 md:w-64 object-contain opacity-0 transition-opacity duration-700" />
+      <img id="preloader-mask" src="/assets/preloader_mask.png" alt="Mask" fetchpriority="high" class="w-40 h-auto sm:w-52 md:w-64 object-contain opacity-0 transition-opacity duration-700" />
     </div>
   </div>
 
@@ -71,10 +71,10 @@
       WebDesign-ps
     </a>
     
-    <nav class="flex items-center gap-8 md:gap-12">
-      <a href="#work" class="nav-link text-xs font-mono uppercase tracking-widest text-muted hover:text-white transition-colors">WORK</a>
-      <a href="#about" class="nav-link text-xs font-mono uppercase tracking-widest text-muted hover:text-white transition-colors">ABOUT</a>
-      <a href="#contact" class="nav-link text-xs font-mono uppercase tracking-widest text-muted hover:text-white transition-colors">CONTACT</a>
+    <nav class="flex items-center gap-5 md:gap-12">
+      <a href="#work" class="nav-link text-xs font-mono uppercase tracking-widest text-muted hover:text-white transition-colors p-2 -m-2">WORK</a>
+      <a href="#about" class="nav-link text-xs font-mono uppercase tracking-widest text-muted hover:text-white transition-colors p-2 -m-2">ABOUT</a>
+      <a href="#contact" class="nav-link text-xs font-mono uppercase tracking-widest text-muted hover:text-white transition-colors p-2 -m-2">CONTACT</a>
     </nav>
 
     <div class="hidden lg:block text-xs font-mono tracking-widest text-muted uppercase">
@@ -92,15 +92,15 @@
         <canvas id="mask-canvas" class="pointer-events-auto"></canvas>
         
         <!-- Hidden Video Source for Nature Mask -->
-        <video id="nature-video" class="hidden" muted loop playsinline preload="auto">
+        <video id="nature-video" class="hidden" muted loop playsinline x5-playsinline webkit-playsinline preload="metadata" disablepictureinpicture>
           <source src="/assets/nature_mask.mp4" type="video/mp4" />
         </video>
 
         <!-- Floating Interactive Hint -->
-        <div class="mask-hint pointer-events-none absolute bottom-20 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-2 bg-black/60 backdrop-blur-md border border-white/10 rounded-full text-[10px] font-mono tracking-widest text-white/70 uppercase z-20">
+        <div class="mask-hint pointer-events-none absolute bottom-8 md:bottom-20 left-1/2 -translate-x-1/2 flex items-center gap-2 px-4 py-3 md:py-2 bg-black/60 backdrop-blur-md border border-white/10 rounded-full text-[10px] font-mono tracking-widest text-white/70 uppercase z-20">
           <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
           <span class="desktop-hint">HOVER TO REVEAL</span>
-          <span class="mobile-hint hidden">TOUCH TO REVEAL</span>
+          <span class="mobile-hint hidden">TOUCH & DRAG TO REVEAL</span>
         </div>
       </div>
 
@@ -178,7 +178,7 @@
 
             <!-- Project Image — pushed higher -->
             <div class="w-full max-w-6xl mx-auto overflow-hidden border border-white/20 shadow-2xl rounded-sm aspect-[16/9] relative group cursor-pointer flex-1">
-              <img src="/assets/strata_preview.png" alt="Strata Project" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" />
+              <img src="/assets/strata_preview.png" alt="Strata Project" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" />
               <div class="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors flex items-center justify-center">
                 <span class="px-6 py-3 bg-black/80 backdrop-blur-md border border-white/30 rounded-full text-xs font-mono tracking-widest uppercase text-white opacity-0 group-hover:opacity-100 transition-opacity">EXPLORE STRATA →</span>
               </div>
@@ -208,7 +208,7 @@
 
             <!-- Project Image — pushed higher -->
             <div class="w-full max-w-6xl mx-auto overflow-hidden border border-white/20 shadow-2xl rounded-sm aspect-[16/9] relative group cursor-pointer flex-1">
-              <img src="/assets/f1_preview.png" alt="F1 Project" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" />
+              <img src="/assets/f1_preview.png" alt="F1 Project" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" />
               <div class="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors flex items-center justify-center">
                 <span class="px-6 py-3 bg-black/80 backdrop-blur-md border border-white/30 rounded-full text-xs font-mono tracking-widest uppercase text-white opacity-0 group-hover:opacity-100 transition-opacity">EXPLORE F1 →</span>
               </div>

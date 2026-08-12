@@ -174,7 +174,7 @@ body {
 
 @media (max-width: 768px) {
   .mask-container {
-    touch-action: pan-y;
+    touch-action: none;
   }
 
   #mask-canvas {
@@ -259,5 +259,56 @@ html.lenis, html.lenis body {
   
   .mobile-hint {
     display: inline-block !important;
+  }
+
+  /* Better tap targets & touch ergonomics */
+  a, button {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  .hero-section {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    padding-bottom: 3.5rem;
+  }
+
+  .hero-quote-wrap h1,
+  .hero-quote-wrap h2 {
+    font-size: clamp(2.6rem, 13vw, 4rem) !important;
+  }
+
+  .hero-fade-in {
+    font-size: 0.95rem;
+  }
+
+  /* Reduce GPU/scroll cost for fixed overlays */
+  .noise-overlay,
+  .grid-overlay {
+    opacity: 0.02 !important;
+    transform: translateZ(0);
+  }
+
+  /* Preloader mask sizing on small screens */
+  .preloader-mask-wrap img {
+    width: 45vw !important;
+    height: auto;
+  }
+
+  /* Project section vertical padding on mobile */
+  .project-slide {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .hero-quote-wrap h1,
+  .hero-quote-wrap h2 {
+    font-size: clamp(2.2rem, 11vw, 3rem) !important;
+  }
+
+  .site-header {
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
 }
