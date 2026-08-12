@@ -110,6 +110,20 @@ export function initMaskCanvas() {
     return { drawWidth, drawHeight, offsetX, offsetY };
   }
 
+  // Shrink the media ~12% and shift it right ~12% of the container
+  function compactDim(dim, containerWidth) {
+    const scale = 0.875;
+    const shiftX = containerWidth * 0.12;
+    const drawWidth = dim.drawWidth * scale;
+    const drawHeight = dim.drawHeight * scale;
+    return {
+      drawWidth,
+      drawHeight,
+      offsetX: dim.offsetX + (dim.drawWidth - drawWidth) / 2 + shiftX,
+      offsetY: dim.offsetY + (dim.drawHeight - drawHeight) / 2
+    };
+  }
+
   // Pointer Movement Handlers
   function updatePointerPosition(clientX, clientY) {
     const rect = container.getBoundingClientRect();
@@ -182,14 +196,14 @@ export function initMaskCanvas() {
 
     if (isImageLoaded) {
       // Draw fullscreen cover stone mask
-      const stoneDim = getCoverDimensions(stoneImage.width, stoneImage.height, w, h);
+      const stoneDim = compactDim(getCoverDimensions(stoneImage.width, stoneImage.height, w, h), w);
       ctx.drawImage(stoneImage, stoneDim.offsetX, stoneDim.offsetY, stoneDim.drawWidth, stoneDim.drawHeight);
 
       // Nature reveal
       if (currentRadius > 0.5) {
         const videoWidth = video.videoWidth || 1920;
         const videoHeight = video.videoHeight || 1080;
-        const vidDim = getCoverDimensions(videoWidth, videoHeight, w, h);
+        const vidDim = compactDim(getCoverDimensions(videoWidth, videoHeight, w, h), w);
         
         videoCtx.drawImage(video, vidDim.offsetX, vidDim.offsetY, vidDim.drawWidth, vidDim.drawHeight);
 
