@@ -283,10 +283,12 @@ html.lenis, html.lenis body {
   }
 
   /* Reduce GPU/scroll cost for fixed overlays */
-  .noise-overlay,
+  .noise-overlay {
+    display: none !important;
+  }
+
   .grid-overlay {
-    opacity: 0.02 !important;
-    transform: translateZ(0);
+    display: none !important;
   }
 
   /* Preloader mask sizing on small screens */

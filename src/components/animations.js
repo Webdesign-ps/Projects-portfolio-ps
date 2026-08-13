@@ -7,7 +7,18 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Mobile: skip expensive pinned/scrub animations and ignore URL-bar resize jitter
+const isMobile = window.matchMedia('(max-width: 768px)').matches;
+ScrollTrigger.config({ ignoreMobileResize: true });
+
 export function initAnimations() {
+
+  if (isMobile) {
+    // Mobile: show everything immediately, skip scroll-driven/scrub work
+    const els = document.querySelectorAll('.hero-line, .hero-fade-in, .site-header, .nav-link, .mask-hint, .fade-up, .process-step, .skill-item, .contact-section h2, #statement-text .word');
+    gsap.set(els, { opacity: 1, y: 0, scale: 1 });
+    return;
+  }
 
   // ============================
   // Hero Section Entrance

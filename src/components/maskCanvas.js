@@ -30,10 +30,6 @@ export function initMaskCanvas() {
   stoneImage.src = `${import.meta.env.BASE_URL}assets/stone_mask.jpg`;
   
   let isImageLoaded = false;
-  stoneImage.onload = () => {
-    isImageLoaded = true;
-    resizeCanvas();
-  };
 
   // Ensure Video Playback
   video.muted = true;
@@ -50,6 +46,10 @@ export function initMaskCanvas() {
   video.play().catch(err => {
     console.warn("Autoplay muted video fallback:", err);
   });
+  // Mobile: no autoplay/decode until first touch (touchstart handler starts it)
+  if (isMobile) {
+    video.pause();
+  }
 
   // Interaction State Variables
   let isHovered = false;
@@ -72,8 +72,8 @@ export function initMaskCanvas() {
   // Canvas Resize Handler (High DPI support) — FULLSCREEN COVER
   function resizeCanvas() {
     const rect = container.getBoundingClientRect();
-    // Cap DPR: 1x on mobile (big perf win), 2x on desktop
-    const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1 : 2);
+    // Cap resolution: 0.8x on mobile (big perf win), 2x on desktop
+    const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 0.8 : 2);
     
     canvas.width = rect.width * dpr;
     canvas.height = rect.height * dpr;
@@ -155,15 +155,18 @@ export function initMaskCanvas() {
   container.addEventListener('mouseenter', (e) => {
     isHovered = true;
     updatePointerPosition(e.clientX, e.clientY);
+    startLoop();
   });
 
   container.addEventListener('mousemove', (e) => {
     isHovered = true;
     updatePointerPosition(e.clientX, e.clientY);
+    startLoop();
   });
 
   container.addEventListener('mouseleave', () => {
     isHovered = false;
+    startLoop();
   });
 
   // Touch Support — reveal circle freely follows the finger for as long as it stays down
@@ -180,6 +183,7 @@ export function initMaskCanvas() {
     if (video.paused) {
       video.play().catch(() => {});
     }
+    startLoop();
   }, { passive: true });
 
   container.addEventListener('touchmove', (e) => {
@@ -189,19 +193,39 @@ export function initMaskCanvas() {
       isHovered = true;
       updatePointerPosition(t.clientX, t.clientY);
     }
+    startLoop();
   }, { passive: true });
 
   container.addEventListener('touchend', () => {
     isHovered = false;
+    startLoop();
   });
 
   container.addEventListener('touchcancel', () => {
     isHovered = false;
+    startLoop();
   });
 
-  // Main Render Loop — throttled on mobile for performance
+  // Main Render Loop — runs only while interacting or animating, stops when idle
   let lastFrame = 0;
   const frameInterval = isMobile ? 33 : 16.7;
+  let isRunning = false;
+  let idleFrames = 0;
+
+  function startLoop() {
+    if (isRunning) return;
+    isRunning = true;
+    idleFrames = 0;
+    animFrameId = requestAnimationFrame(render);
+  }
+
+  function stopLoop() {
+    isRunning = false;
+    if (animFrameId) {
+      cancelAnimationFrame(animFrameId);
+      animFrameId = null;
+    }
+  }
 
   function render() {
     const now = performance.now();
@@ -285,10 +309,41 @@ export function initMaskCanvas() {
       }
     }
 
+    // Auto-stop when fully idle (no interaction and radius collapsed)
+    const settlingX = Math.abs(targetX - currentX) > 0.5;
+    const settlingY = Math.abs(targetY - currentY) > 0.5;
+    const settlingR = (isHovered ? 1 : 0) !== (currentRadius > 0.5 ? 1 : 0) || currentRadius > 0.5;
+    if (!isHovered && !settlingX && !settlingY && !settlingR) {
+      idleFrames++;
+      if (idleFrames > 3) {
+        stopLoop();
+        return;
+      }
+    } else {
+      idleFrames = 0;
+    }
+
     animFrameId = requestAnimationFrame(render);
   }
 
-  render();
+  // Kick off an initial render to paint the stone image, then idle
+  function renderStatic() {
+    if (!isImageLoaded) return;
+    const rect = container.getBoundingClientRect();
+    const w = rect.width;
+    const h = rect.height;
+    ctx.clearRect(0, 0, w, h);
+    const stoneDim = compactDim(getCoverDimensions(stoneImage.width, stoneImage.height, w, h), w);
+    ctx.drawImage(stoneImage, stoneDim.offsetX, stoneDim.offsetY, stoneDim.drawWidth, stoneDim.drawHeight);
+  }
+
+  stoneImage.onload = () => {
+    isImageLoaded = true;
+    resizeCanvas();
+    renderStatic();
+  };
+
+  startLoop();
 
   return () => {
     if (animFrameId) cancelAnimationFrame(animFrameId);
